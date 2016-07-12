@@ -1,4 +1,5 @@
-import logging
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from api.database.database import db
 from api.conf.auth import jwt, auth
