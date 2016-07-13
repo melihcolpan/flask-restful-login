@@ -7,14 +7,22 @@ from flask import g
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(length=80))
-    password = db.Column(db.String(length=80))
 
+    # Generates default class name for table. For changing use
+    # __tablename__ = 'users'
+
+    # Table fields.
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(length=80))
+    password = db.Column(db.String(length=80))
+    email = db.Column(db.String(length=80))
+
+    # Generates auth token.
     def generate_auth_token(self):
         token = jwt.dumps({'email': self.email})
         return token
 
+    # Generates a new access token from refresh token.
     @staticmethod
     @auth.verify_token
     def verify_auth_token(token):
@@ -27,3 +35,21 @@ class User(db.Model):
             g.user = data['email']
             return True
         return False
+
+    def __repr__(self):
+        return "<User(name='%s', fullname='%s')>" % (
+                      self.email, self.password)
+
+
+class Blacklist(db.Model):
+
+    # Generates default class name for table. For changing use
+    # __tablename__ = 'users'
+
+    # Blacklist fields.
+    id = db.Column(db.Integer, primary_key=True)
+    refresh_token = db.Column(db.String(length=255))
+
+    def __repr__(self):
+        return "<User(refresh_token='%s', status='invalidated.')>" % (
+                      self.refresh_token)
