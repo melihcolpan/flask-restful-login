@@ -1,7 +1,16 @@
 # flask-restful-login-example
 
+####INSTALLATION
+```
+git clone https://github.com/melihcolpan/flask-restful-login
+cd flask-restful-login
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python -m main
+```
 
-#### For requests using httpie: *[http://radek.io/2015/10/20/httpie/]()*
+#### For requests using httpie: *[https://github.com/jkbrzt/httpie]()*
 
 ##### Register:
 
@@ -26,7 +35,7 @@ http POST :5000/v1/auth/logout Authorization:"bearer ACCESS_TOKEN" refresh_token
 ##### Test requiring authentication handler
 
 ```sh
-http POST :5000/data Authorization:"bearer ACCESS_TOKEN"
+http GET :5000/data Authorization:"bearer ACCESS_TOKEN"
 ```
 
 ------------------------------------------------------------------------------------------------------------------------
