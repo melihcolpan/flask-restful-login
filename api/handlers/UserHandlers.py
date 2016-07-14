@@ -81,11 +81,11 @@ class Logout(Resource):
         refresh_token = request.json.get('refresh_token')
 
         # Create a blacklist refresh token.
-        blacklist_refresh_token = Blacklist(refresh_token=refresh_token)
-
-        if blacklist_refresh_token is not None:
+        existing_token = Blacklist.query.filter_by(refresh_token=refresh_token).first()
+        if existing_token is not None:
             return {'status': 'already invalidated', 'refresh_token': refresh_token}
 
+        blacklist_refresh_token = Blacklist(refresh_token=refresh_token)
         # Add refresh token to session.
         db.session.add(blacklist_refresh_token)
 
