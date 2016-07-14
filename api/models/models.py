@@ -4,6 +4,7 @@
 from api.database.database import db
 from api.conf.auth import jwt, auth
 from flask import g
+from datetime import datetime
 
 
 class User(db.Model):
@@ -16,6 +17,7 @@ class User(db.Model):
     username = db.Column(db.String(length=80))
     password = db.Column(db.String(length=80))
     email = db.Column(db.String(length=80))
+    created = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Generates auth token.
     def generate_auth_token(self):

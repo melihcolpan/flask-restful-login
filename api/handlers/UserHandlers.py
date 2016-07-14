@@ -39,6 +39,8 @@ class Register(Resource):
         # Commit session.
         db.session.commit()
 
+        User.query.filter_by(email=email, password=password).first()
+
         # Return success if registration is completed.
         return {'status': 'registration completed.'}
 
@@ -160,4 +162,6 @@ class ResetPassword(Resource):
 class Data(Resource):
     @auth.login_required
     def get(self):
-        return "Test data OK"
+
+        # Return some data from db.
+        return "Test data got!"
