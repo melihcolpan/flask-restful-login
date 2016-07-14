@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 import logging
 import api.error.errors as error
 from flask_restful import Resource
@@ -9,15 +10,25 @@ from api.models.models import User, Blacklist
 from api.conf.auth import auth
 from api.database.database import db
 from flask import g
+from datetime import datetime
+from api.schemas.schemas import UserSchema
 
 
 class Register(Resource):
     @staticmethod
     def post():
 
-        # Get username, password and email.
-        username, password, email = request.json.get('username').strip(), request.json.get('password').strip(), \
-                                    request.json.get('email').strip()
+        try:
+            # Get username, password and email.
+            username, password, email = request.json.get('username').strip(), request.json.get('password').strip(), \
+                                        request.json.get('email').strip()
+        except Exception as why:
+
+            # Log input strip or etc. errors.
+            logging.info("Username, password or email is wrong. " + str(why))
+
+            # Return invalid input error.
+            return error.INVALID_INPUT_422
 
         # Check if any field is none.
         if username is None or password is None or email is None:
@@ -49,8 +60,17 @@ class Login(Resource):
     @staticmethod
     def post():
 
-        # Get user email and password.
-        email, password = request.json.get('email').strip(), request.json.get('password').strip()
+        try:
+            # Get user email and password.
+            email, password = request.json.get('email').strip(), request.json.get('password').strip()
+
+        except Exception as why:
+
+            # Log input strip or etc. errors.
+            logging.info("Email or password is wrong. " + str(why))
+
+            # Return invalid input error.
+            return error.INVALID_INPUT_422
 
         # Check if user information is none.
         if email is None or password is None:
@@ -75,16 +95,21 @@ class Login(Resource):
 
 class Logout(Resource):
     @staticmethod
+    @auth.login_required
     def post():
 
         # Get refresh token.
         refresh_token = request.json.get('refresh_token')
 
+        # Get if the refresh token is in blacklist
+        ref = Blacklist.query.filter_by(refresh_token=refresh_token).first()
+
+        # Check refresh token is existed.
+        if ref is not None:
+            return {'status': 'already invalidated', 'refresh_token': refresh_token}
+
         # Create a blacklist refresh token.
         blacklist_refresh_token = Blacklist(refresh_token=refresh_token)
-
-        if blacklist_refresh_token is not None:
-            return {'status': 'already invalidated', 'refresh_token': refresh_token}
 
         # Add refresh token to session.
         db.session.add(blacklist_refresh_token)
@@ -159,9 +184,34 @@ class ResetPassword(Resource):
         return {'status': 'password changed.'}
 
 
-class Data(Resource):
+class UsersData(Resource):
     @auth.login_required
     def get(self):
 
-        # Return some data from db.
-        return "Test data got!"
+        # Get usernames.
+        usernames = [] if request.args.get('usernames') is None else request.args.get('usernames').split(',')
+
+        # Get emails.
+        emails = [] if request.args.get('emails') is None else request.args.get('emails').split(',')
+
+        # Get start date.
+        start_date = datetime.strptime(request.args.get('start_date'), '%d.%m.%Y')
+
+        # Get end date.
+        end_date = datetime.strptime(request.args.get('end_date'), '%d.%m.%Y')
+
+        # Filter users by usernames, emails and range of date.
+        users = User.query\
+            .filter(User.username.in_(usernames))\
+            .filter(User.email.in_(emails))\
+            .filter(User.created.between(start_date, end_date))\
+            .all()
+
+        # Create user schema for serializing.
+        user_schema = UserSchema(many=True)
+
+        # Get json data
+        data, errors = user_schema.dump(users)
+
+        # Return json data from db.
+        return data

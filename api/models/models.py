@@ -39,8 +39,8 @@ class User(db.Model):
         return False
 
     def __repr__(self):
-        return "<User(name='%s', fullname='%s')>" % (
-                      self.email, self.password)
+        return "<User(id='%s', name='%s', password='%s', email='%s', created='%s')>" % (
+                      self.id, self.username, self.password, self.email, self.created)
 
 
 class Blacklist(db.Model):
@@ -53,5 +53,5 @@ class Blacklist(db.Model):
     refresh_token = db.Column(db.String(length=255))
 
     def __repr__(self):
-        return "<User(refresh_token='%s', status='invalidated.')>" % (
-                      self.refresh_token)
+        return "<User(id='%s', refresh_token='%s', status='invalidated.')>" % (
+                      self.id, self.refresh_token)

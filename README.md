@@ -15,6 +15,13 @@ http POST :5000/v1/auth/register username=test_name password=test_password email
 http POST :5000/v1/auth/login email=example@example.com password=test_password
 Got access token and refresh token!
 ```
+###### Response: Got access token and refresh token!
+
+##### Logout:
+
+```sh
+http POST :5000/v1/auth/logout Authorization:"bearer ACCESS_TOKEN" refresh_token=REFRESH_TOKEN
+```
 
 ##### Test requiring authentication handler
 
@@ -38,6 +45,13 @@ curl -H "Content-Type: application/json" --data '{"username":"test_name","passwo
 curl -H "Content-Type: application/json" --data '{"email":"example@example.com", "password":"test_password"}' http://localhost:5000/v1/auth/login
 ```
 ###### Response: Got access token and refresh token!
+
+##### Logout:
+
+```sh
+curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" --data '{"refresh_token":"REFRESH_TOKEN"}' http://localhost:5000/v1/auth/logout
+
+```
 
 ##### Test requiring authentication handler
 

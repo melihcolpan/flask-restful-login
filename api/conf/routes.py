@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask_restful import Api
-from api.handlers.UserHandlers import Register, Login, Logout, RefreshToken, Data, ResetPassword
+from api.handlers.UserHandlers import Register, Login, Logout, RefreshToken, UsersData, ResetPassword
 
 
 def generate_routes(app):
@@ -13,4 +13,4 @@ def generate_routes(app):
     api.add_resource(RefreshToken, '/v1/auth/refresh')
     api.add_resource(ResetPassword, '/v1/auth/password_reset')
 
-    api.add_resource(Data, '/data')
+    api.add_resource(UsersData, '/users')
