@@ -3,6 +3,7 @@
 
 import logging
 import api.error.errors as error
+from api.roles import role_required
 from flask_restful import Resource
 from flask import request
 from api.conf.auth import refresh_jwt
@@ -50,8 +51,6 @@ class Register(Resource):
         # Commit session.
         db.session.commit()
 
-        User.query.filter_by(email=email, password=password).first()
-
         # Return success if registration is completed.
         return {'status': 'registration completed.'}
 
@@ -83,8 +82,16 @@ class Login(Resource):
         if user is None:
             return error.DOES_NOT_EXIST
 
-        # Generate access token.
-        access_token = user.generate_auth_token()
+        # If user is admin.
+        if user.user_role == 'admin':
+
+            # Generate access token. This method takes boolean value for checking admin or normal user.
+            access_token = user.generate_auth_token(True)
+
+        else:
+
+            # Generate access token. This method takes boolean value for checking admin or normal user.
+            access_token = user.generate_auth_token(False)
 
         # Generate refresh token.
         refresh_token = refresh_jwt.dumps({'email': email})
@@ -152,7 +159,7 @@ class RefreshToken(Resource):
         user = User(email=data['email'])
 
         # New token generate.
-        token = user.generate_auth_token()
+        token = user.generate_auth_token(False)
 
         # Return new access token.
         return {'access_token': token}
@@ -186,32 +193,57 @@ class ResetPassword(Resource):
 
 class UsersData(Resource):
     @auth.login_required
+    @role_required.m_roles_admin_required
+    def get(self):
+        try:
+
+            # Get usernames.
+            usernames = [] if request.args.get('usernames') is None else request.args.get('usernames').split(',')
+
+            # Get emails.
+            emails = [] if request.args.get('emails') is None else request.args.get('emails').split(',')
+
+            # Get start date.
+            start_date = datetime.strptime(request.args.get('start_date'), '%d.%m.%Y')
+
+            # Get end date.
+            end_date = datetime.strptime(request.args.get('end_date'), '%d.%m.%Y')
+
+            # Filter users by usernames, emails and range of date.
+            users = User.query\
+                .filter(User.username.in_(usernames))\
+                .filter(User.email.in_(emails))\
+                .filter(User.created.between(start_date, end_date))\
+                .all()
+
+            # Create user schema for serializing.
+            user_schema = UserSchema(many=True)
+
+            # Get json data
+            data, errors = user_schema.dump(users)
+
+            # Return json data from db.
+            return data
+
+        except Exception as why:
+
+            # Log the error.
+            logging.error(why)
+
+            # Return error.
+            return error.INVALID_INPUT_422
+
+
+class DataAdminRequired(Resource):
+    @auth.login_required
+    @role_required.m_roles_admin_required
     def get(self):
 
-        # Get usernames.
-        usernames = [] if request.args.get('usernames') is None else request.args.get('usernames').split(',')
+        return "Test admin data OK."
 
-        # Get emails.
-        emails = [] if request.args.get('emails') is None else request.args.get('emails').split(',')
 
-        # Get start date.
-        start_date = datetime.strptime(request.args.get('start_date'), '%d.%m.%Y')
+class DataUserRequired(Resource):
+    @auth.login_required
+    def get(self):
 
-        # Get end date.
-        end_date = datetime.strptime(request.args.get('end_date'), '%d.%m.%Y')
-
-        # Filter users by usernames, emails and range of date.
-        users = User.query\
-            .filter(User.username.in_(usernames))\
-            .filter(User.email.in_(emails))\
-            .filter(User.created.between(start_date, end_date))\
-            .all()
-
-        # Create user schema for serializing.
-        user_schema = UserSchema(many=True)
-
-        # Get json data
-        data, errors = user_schema.dump(users)
-
-        # Return json data from db.
-        return data
+        return "Test user data OK."
