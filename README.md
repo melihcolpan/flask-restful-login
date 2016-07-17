@@ -23,7 +23,6 @@ http POST :5000/v1/auth/register username=test_name password=test_password email
 
 ```sh
 http POST :5000/v1/auth/login email=example@example.com password=test_password
-Got access token and refresh token!
 ```
 
 ###### Response: Got access token and refresh token!
