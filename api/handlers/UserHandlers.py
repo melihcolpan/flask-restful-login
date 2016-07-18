@@ -85,12 +85,12 @@ class Login(Resource):
         # If user is admin.
         if user.user_role == 'admin':
 
-            # Generate access token. This method takes boolean value for checking admin or normal user.
+            # Generate access token. This method takes boolean value for checking admin or normal user. Admin: 1 or 0.
             access_token = user.generate_auth_token(True)
 
         else:
 
-            # Generate access token. This method takes boolean value for checking admin or normal user.
+            # Generate access token. This method takes boolean value for checking admin or normal user. Admin: 1 or 0.
             access_token = user.generate_auth_token(False)
 
         # Generate refresh token.
