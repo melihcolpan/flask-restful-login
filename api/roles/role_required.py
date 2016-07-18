@@ -9,7 +9,7 @@ from api.conf.auth import jwt
 
 
 def m_roles_admin_required(f):
-    
+
     def decorated(*args, **kwargs):
 
         # Get reuqest authorization.
