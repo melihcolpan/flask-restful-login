@@ -12,7 +12,7 @@ def create_admin_user():
 
     # If user is none.
     if user is None:
-
+    
         # Create admin user if it does not existed.
         user = User(username='admin', password='admin_pass', email='admin@example.com', user_role='admin')
 
