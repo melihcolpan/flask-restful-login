@@ -14,7 +14,7 @@ def create_admin_user():
     if user is None:
 
         # Create admin user if it does not existed.
-        user = User(username='admin', password='admin_pass', email='admin@example.com', user_role='admin')
+        user = User(username='admin_username', password='admin_password', email='admin_email@example.com', user_role='admin')
 
         # Add user to session.
         db.session.add(user)
@@ -23,11 +23,11 @@ def create_admin_user():
         db.session.commit()
 
         # Print admin user status.
-        print("Admin user was set.")
+        print("Admin was set.")
 
     else:
         # Print admin user status.
-        print("Admin user already set.")
+        print("Admin already set.")
 
 
 def create_test_user():
@@ -39,7 +39,7 @@ def create_test_user():
     if user is None:
 
         # Create admin user if it does not existed.
-        user = User(username='test_username', password='test_user_pass', email='test_user_email@example.com',
+        user = User(username='test_username', password='test_password', email='test_email@example.com',
                     user_role='user')
 
         # Add user to session.
@@ -49,9 +49,9 @@ def create_test_user():
         db.session.commit()
 
         # Print admin user status.
-        print("Admin user was set.")
+        print("Test user was set.")
 
     else:
 
         # Print admin user status.
-        print("Admin user already set.")
+        print("User already set.")
