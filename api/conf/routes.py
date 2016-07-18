@@ -3,7 +3,7 @@
 
 from flask_restful import Api
 from api.handlers.UserHandlers import Register, Login, Logout, RefreshToken, UsersData, ResetPassword, \
-    DataAdminRequired, DataUserRequired
+    DataAdminRequired, DataUserRequired, AddUser
 
 
 def generate_routes(app):
@@ -35,3 +35,6 @@ def generate_routes(app):
 
     # Example user handler for user permission.
     api.add_resource(DataUserRequired, '/data_user')
+
+    # Example user handler for user permission.
+    api.add_resource(AddUser, '/user_add')

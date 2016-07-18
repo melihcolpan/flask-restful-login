@@ -2,49 +2,58 @@
 # -*- coding: utf-8 -*-
 
 import logging
+
+import functools
+
 import api.error.errors as error
 from flask import request
 from api.conf.auth import jwt
 # from werkzeug.datastructures import Authorization
 
 
-def m_roles_admin_required(f):
+def permission(arg):
 
-    def decorated(*args, **kwargs):
+    def check_permissions(f):
 
-        # Get reuqest authorization.
-        auth = request.authorization
+        @functools.wraps(f)
+        def decorated(*args, **kwargs):
 
-        # Check if auth is none or not.
-        if auth is None and 'Authorization' in request.headers:
+            # Get request authorization.
+            auth = request.authorization
 
-            try:
-                # Get auth type and token.
-                auth_type, token = request.headers['Authorization'].split(None, 1)
-                # auth = Authorization(auth_type, {'token': token})
+            # Check if auth is none or not.
+            if auth is None and 'Authorization' in request.headers:
 
-                # Generate new token.
-                data = jwt.loads(token)
+                try:
+                    # Get auth type and token.
+                    auth_type, token = request.headers['Authorization'].split(None, 1)
+                    # auth = Authorization(auth_type, {'token': token})
 
-                # Check if admin
-                if data['admin'] != 1:
+                    # Generate new token.
+                    data = jwt.loads(token)
 
-                    # Return if user is not admin.
-                    return error.NOT_ADMIN
+                    # Check if admin
+                    if data['admin'] < arg:
 
-            except ValueError:
-                # The Authorization header is either empty or has no token.
-                return error.HEADER_NOT_FOUND
+                        # Return if user is not admin.
+                        return error.NOT_ADMIN
 
-            except Exception as why:
-                # Log the error.
-                logging.error(why)
+                except ValueError:
+                    # The Authorization header is either empty or has no token.
+                    return error.HEADER_NOT_FOUND
 
-                # If it does not generated return false.
-                return error.INVALID_INPUT_422
+                except Exception as why:
+                    # Log the error.
+                    logging.error(why)
 
-        # Return method.
-        return f(*args, **kwargs)
+                    # If it does not generated return false.
+                    return error.INVALID_INPUT_422
 
-    # Return decorated method.
-    return decorated
+            # Return method.
+            return f(*args, **kwargs)
+
+        # Return decorated method.
+        return decorated
+
+    # Return check permissions method.
+    return check_permissions

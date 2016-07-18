@@ -63,6 +63,8 @@ class Login(Resource):
             # Get user email and password.
             email, password = request.json.get('email').strip(), request.json.get('password').strip()
 
+            print email, password
+
         except Exception as why:
 
             # Log input strip or etc. errors.
@@ -82,16 +84,25 @@ class Login(Resource):
         if user is None:
             return error.DOES_NOT_EXIST
 
-        # If user is admin.
-        if user.user_role == 'admin':
+        if user.user_role == 'user':
 
             # Generate access token. This method takes boolean value for checking admin or normal user. Admin: 1 or 0.
-            access_token = user.generate_auth_token(True)
+            access_token = user.generate_auth_token(0)
+
+        # If user is admin.
+        elif user.user_role == 'admin':
+
+            # Generate access token. This method takes boolean value for checking admin or normal user. Admin: 1 or 0.
+            access_token = user.generate_auth_token(1)
+
+        # If user is super admin.
+        elif user.user_role == 'sa':
+
+            # Generate access token. This method takes boolean value for checking admin or normal user. Admin: 2, 1, 0.
+            access_token = user.generate_auth_token(2)
 
         else:
-
-            # Generate access token. This method takes boolean value for checking admin or normal user. Admin: 1 or 0.
-            access_token = user.generate_auth_token(False)
+            return error.INVALID_INPUT_422
 
         # Generate refresh token.
         refresh_token = refresh_jwt.dumps({'email': email})
@@ -193,7 +204,7 @@ class ResetPassword(Resource):
 
 class UsersData(Resource):
     @auth.login_required
-    @role_required.m_roles_admin_required
+    @role_required.permission(0)
     def get(self):
         try:
 
@@ -234,15 +245,26 @@ class UsersData(Resource):
             return error.INVALID_INPUT_422
 
 
+# auth.login_required: Auth is necessary for this handler.
+# role_required.permission: Role required user=0, admin=1 and super admin=2.
+
 class DataAdminRequired(Resource):
     @auth.login_required
-    @role_required.m_roles_admin_required
+    @role_required.permission(1)
     def get(self):
 
         return "Test admin data OK."
 
 
+class AddUser(Resource):
+    @auth.login_required
+    @role_required.permission(2)
+    def get(self):
+        return "OK"
+
+
 class DataUserRequired(Resource):
+
     @auth.login_required
     def get(self):
 

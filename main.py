@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-from flask import Flask
+from flask import Flask, app
 from api.database.database import db
 from api.conf.config import SQLALCHEMY_DATABASE_URI
 from api.conf.routes import generate_routes
-from api.db_initializer.db_initializer import create_admin_user, create_test_user
+from api.db_initializer.db_initializer import create_admin_user, create_test_user, create_super_admin
 
 
 def create_app():
@@ -19,6 +19,8 @@ def create_app():
 
     # Set database url.
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
     # Database initialize with app.
     db.init_app(app)
@@ -44,6 +46,9 @@ if __name__ == '__main__':
     # Create database tables.
     db.create_all()
 
+    # Create default super admin user in database.
+    create_super_admin()
+
     # Create default admin user in database.
     create_admin_user()
 
@@ -54,4 +59,4 @@ if __name__ == '__main__':
     generate_routes(app)
 
     # Run app.
-    app.run()
+    app.run(port=5000, debug=True, host='localhost', use_reloader=False)

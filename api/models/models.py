@@ -31,13 +31,22 @@ class User(db.Model):
     user_role = db.Column(db.String, default='user')
 
     # Generates auth token.
-    def generate_auth_token(self, admin_check):
+    def generate_auth_token(self, permission_level):
 
         # Check if admin.
-        if admin_check:
+        if permission_level == 1:
 
             # Generate admin token with flag 1.
             token = jwt.dumps({'email': self.email, 'admin': 1})
+
+            # Return admin flag.
+            return token
+
+            # Check if admin.
+        elif permission_level == 2:
+
+            # Generate admin token with flag 1.
+            token = jwt.dumps({'email': self.email, 'admin': 2})
 
             # Return admin flag.
             return token
