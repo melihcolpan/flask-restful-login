@@ -204,7 +204,7 @@ class ResetPassword(Resource):
 
 class UsersData(Resource):
     @auth.login_required
-    @role_required.permission(0)
+    @role_required.permission(2)
     def get(self):
         try:
 
@@ -219,6 +219,8 @@ class UsersData(Resource):
 
             # Get end date.
             end_date = datetime.strptime(request.args.get('end_date'), '%d.%m.%Y')
+
+            print usernames, emails, start_date, end_date
 
             # Filter users by usernames, emails and range of date.
             users = User.query\
@@ -260,6 +262,7 @@ class AddUser(Resource):
     @auth.login_required
     @role_required.permission(2)
     def get(self):
+
         return "OK"
 
 

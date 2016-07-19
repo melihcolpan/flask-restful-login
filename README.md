@@ -35,26 +35,39 @@ http POST :5000/v1/auth/logout Authorization:"bearer ACCESS_TOKEN" refresh_token
 
 ###### Note: Test user and admin users are created in database initializer class.
 
-##### Test user login: 
+##### User login: 
 
 ```sh
 http POST :5000/v1/auth/login email=test_email@example.com password=test_password
 ```
 
-##### Test admin login: 
+##### Admin login: 
 
 ```sh
 http POST :5000/v1/auth/login email=admin_email@example.com password=admin_password
 ```
 
-##### Test admin requiring authentication example handlers
+##### Super admin login: 
 
 ```sh
-http GET :5000/users Authorization:"bearer ACCESS_TOKEN"
+http POST :5000/v1/auth/login email=sa_email@example.com password=sa_password
+```
+
+##### Super admin requiring authentication example handlers
+
+```sh
+http GET :5000/user_add Authorization:"bearer ACCESS_TOKEN"
+
+http GET :5000/users Authorization:"Bearer ACCESS_TOKEN" usernames==test_username,admin_username emails==test_email@example.com,admin_email@example.com start_date==01.01.1993 end_date==01.01.2050
+```
+
+##### Admin requiring authentication example handlers
+
+```sh
 http GET :5000/data_admin Authorization:"Bearer ACCESS_TOKEN"
 ```
 
-##### Test user requiring authentication handler
+##### User requiring authentication handler
 
 ```sh
 http GET :5000/data_user Authorization:"Bearer ACCESS_TOKEN"
@@ -88,22 +101,35 @@ curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN"
 
 ###### Note: Test user and admin users are created in database initializer class.
 
-##### Test user login: 
+##### User login: 
 
 ```sh
 curl -H "Content-Type: application/json" --data '{"password":"test_password", "email":"test_email@example.com"}' http://localhost:5000/v1/auth/login
 ```
 
-##### Test admin login: 
+##### Admin login: 
 
 ```sh
 curl -H "Content-Type: application/json" --data '{"password":"admin_password", "email":"admin_email@example.com"}' http://localhost:5000/v1/auth/login
 ```
 
+##### Super admin login: 
+
+```sh
+curl -H "Content-Type: application/json" --data '{"password":"sa_password", "email":"sa_email@example.com"}' http://localhost:5000/v1/auth/login
+```
+
+##### Test super admin requiring authentication example handlers
+
+```sh
+curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/user_add
+
+curl -X GET 'localhost:5000/users?usernames=test_username,admin_username&emails=test_email@example.com,admin_email@example.com&start_date=01.01.1993&end_date=01.01.2050' -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" 
+```
+
 ##### Test admin requiring authentication example handlers
 
 ```sh
-curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/users
 curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/data_admin
 ```
 
