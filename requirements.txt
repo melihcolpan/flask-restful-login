@@ -6,7 +6,7 @@ Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.4.0
 itsdangerous==1.1.0
 Jinja2==2.10.1
-MarkupSafe==0.23
+MarkupSafe==1.1.1
 python-dateutil==2.5.3
 pytz==2016.6
 six==1.10.0
