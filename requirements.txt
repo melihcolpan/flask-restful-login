@@ -2,7 +2,7 @@ aniso8601==7.0.0
 click==7.0
 Flask==1.1.1
 Flask-HTTPAuth==3.3.0
-Flask-RESTful==0.3.5
+Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.1
 itsdangerous==0.24
 Jinja2==2.8
