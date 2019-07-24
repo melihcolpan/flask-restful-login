@@ -8,7 +8,7 @@ itsdangerous==1.1.0
 Jinja2==2.10.1
 MarkupSafe==1.1.1
 python-dateutil==2.8.0
-pytz==2016.6
+pytz==2019.1
 six==1.10.0
 SQLAlchemy==1.0.14
 Werkzeug==0.11.10
