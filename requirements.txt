@@ -5,7 +5,7 @@ Flask-HTTPAuth==3.3.0
 Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.4.0
 itsdangerous==1.1.0
-Jinja2==2.8
+Jinja2==2.10.1
 MarkupSafe==0.23
 python-dateutil==2.5.3
 pytz==2016.6
