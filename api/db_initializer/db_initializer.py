@@ -67,7 +67,7 @@ def create_test_user(username=None, password=None, email=None, user_role=None):
     if user is None:
 
         # Create admin user if it does not existed.
-        #user = User(username=username, password=password, email=email, user_role=user_role)
+        # user = User(username=username, password=password, email=email, user_role=user_role)
         user = User(username='test_username', password='test_password', email='test_email@example.com',
                     user_role='user')
 

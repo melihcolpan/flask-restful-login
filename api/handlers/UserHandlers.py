@@ -63,7 +63,7 @@ class Login(Resource):
             # Get user email and password.
             email, password = request.json.get('email').strip(), request.json.get('password').strip()
 
-            print email, password
+            print(email, password)
 
         except Exception as why:
 
@@ -220,7 +220,7 @@ class UsersData(Resource):
             # Get end date.
             end_date = datetime.strptime(request.args.get('end_date'), '%d.%m.%Y')
 
-            print usernames, emails, start_date, end_date
+            print(usernames, emails, start_date, end_date)
 
             # Filter users by usernames, emails and range of date.
             users = User.query\
