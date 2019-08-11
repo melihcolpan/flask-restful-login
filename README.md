@@ -11,7 +11,7 @@ pip install -r requirements.txt
 python -m main
 ```
 
-#### For requests using httpie: *[https://github.com/jkbrzt/httpie]()*
+#### For requests using httpie: *[https://httpie.org/doc]()*
 
 ##### Register:
 
