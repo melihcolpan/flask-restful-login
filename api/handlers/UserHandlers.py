@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import api.error.errors as error
-from api.roles import role_required
-from flask_restful import Resource
-from flask import request
-from api.conf.auth import refresh_jwt
-from api.models.models import User, Blacklist
-from api.conf.auth import auth
-from api.database.database import db
-from flask import g
 from datetime import datetime
+
+from flask import g, request
+from flask_restful import Resource
+
+import api.error.errors as error
+from api.conf.auth import auth, refresh_jwt
+from api.database.database import db
+from api.models.models import Blacklist, User
+from api.roles import role_required
 from api.schemas.schemas import UserSchema
 
 

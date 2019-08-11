@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from flask_restful import Api
-from api.handlers.UserHandlers import Register, Login, Logout, RefreshToken, UsersData, ResetPassword, \
-    DataAdminRequired, DataUserRequired, AddUser
+
+from api.handlers.UserHandlers import (AddUser, DataAdminRequired,
+                                       DataUserRequired, Login, Logout,
+                                       RefreshToken, Register, ResetPassword,
+                                       UsersData)
 
 
 def generate_routes(app):

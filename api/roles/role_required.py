@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import functools
 import logging
 
-import functools
+from flask import request
 
 import api.error.errors as error
-from flask import request
 from api.conf.auth import jwt
+
 # from werkzeug.datastructures import Authorization
 
 

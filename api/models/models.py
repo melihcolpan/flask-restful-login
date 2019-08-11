@@ -1,10 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from api.database.database import db
-from api.conf.auth import jwt, auth
-from flask import g
 from datetime import datetime
+
+from flask import g
+
+from api.conf.auth import auth, jwt
+from api.database.database import db
 
 
 class User(db.Model):
