@@ -1,7 +1,7 @@
 # flask-restful-login-example
 
-####INSTALLATION
-
+#### INSTALLATION
+Python 3 is required. There are ways to send requests to server. httpie and curl are simple and useful tools. Their use can be seen below.
 ```
 git clone https://github.com/melihcolpan/flask-restful-login
 cd flask-restful-login
