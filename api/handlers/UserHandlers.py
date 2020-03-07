@@ -108,7 +108,7 @@ class Login(Resource):
         refresh_token = refresh_jwt.dumps({'email': email})
 
         # Return access token and refresh token.
-        return {'access_token': access_token, 'refresh_token': refresh_token}
+        return {'access_token': access_token.decode(), 'refresh_token': refresh_token.decode()}
 
 
 class Logout(Resource):
