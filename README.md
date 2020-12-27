@@ -76,37 +76,21 @@ curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN"
 >__There are some example routes in UserHandlers file. These handlers mostly return only text. To use them:__
 
 
-#### User requiring authentication handler
+#### Example routes that require authentication
+> Route addresses according to user privileges 
+> For user: /data_user
+> For admin: /data_admin
+> For super admin: /data_super_admin
 * HTTPIE Request:
 ```sh
-http GET :5000/data_user Authorization:"Bearer ACCESS_TOKEN"
+http GET :5000/<ROUTE-ADDRESS> Authorization:"Bearer ACCESS_TOKEN"
 ```
 * Curl Request:
 ```sh
-curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/data_user
+curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/<ROUTE-ADDRESS>
 ```
 
-#### Admin requiring authentication example handler
-* HTTPIE Request:
-```sh
-http GET :5000/data_admin Authorization:"Bearer ACCESS_TOKEN"
-```
-* Curl Request:
-```sh
-curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/data_admin
-```
-
-#### Super admin requiring authentication example handler
-* HTTPIE Request:
-```sh
-http GET :5000/data_super_admin Authorization:"Bearer ACCESS_TOKEN"
-```
-* Curl Request:
-```sh
-curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/data_super_admin
-```
-
-##### Super admin requiring authentication example handler, list users
+#### Super admin requiring authentication example handler, list users
 This handler searches username, email or creation dates (range) in users table and returns information these users to super admin.
 * HTTPIE Request:
 ```sh
