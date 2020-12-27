@@ -2,11 +2,11 @@
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 ### INSTALLATION
-Python 3 is required. There are ways to send requests to server. 
-Postman, Insomnia, cURL, httpie and curl are simple and useful tools to send requests. 
-I mostly prefer httpie and curl. Their usage can be seen below.
+* Python 3 is required. There are ways to send requests to server. 
+* Postman, Insomnia, cURL, httpie and curl are simple and useful tools to send requests. 
+* I mostly prefer httpie and curl. Their usage can be seen below.
 
-Pull project and install requirements to virtual environment. Then run.
+Pull project and install requirements to virtual environment (*[https://pypi.org/project/virtualenv/]()*). Then run.
 ```
 $ git clone https://github.com/melihcolpan/flask-restful-login
 $ cd flask-restful-login
