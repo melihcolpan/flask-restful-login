@@ -30,7 +30,7 @@ class User(db.Model):
     created = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Unless otherwise stated default role is user.
-    user_role = db.Column(db.String, default='user')
+    user_role = db.Column(db.String, default="user")
 
     # Generates auth token.
     def generate_auth_token(self, permission_level):
@@ -39,7 +39,7 @@ class User(db.Model):
         if permission_level == 1:
 
             # Generate admin token with flag 1.
-            token = jwt.dumps({'email': self.email, 'admin': 1})
+            token = jwt.dumps({"email": self.email, "admin": 1})
 
             # Return admin flag.
             return token
@@ -48,13 +48,13 @@ class User(db.Model):
         elif permission_level == 2:
 
             # Generate admin token with flag 1.
-            token = jwt.dumps({'email': self.email, 'admin': 2})
+            token = jwt.dumps({"email": self.email, "admin": 2})
 
             # Return admin flag.
             return token
 
         # Return normal user flag.
-        return jwt.dumps({'email': self.email, 'admin': 0})
+        return jwt.dumps({"email": self.email, "admin": 0})
 
     # Generates a new access token from refresh token.
     @staticmethod
@@ -73,13 +73,13 @@ class User(db.Model):
             return False
 
         # Check if email and admin permission variables are in jwt.
-        if 'email' and 'admin' in data:
+        if "email" and "admin" in data:
 
             # Set email from jwt.
-            g.user = data['email']
+            g.user = data["email"]
 
             # Set admin permission from jwt.
-            g.admin = data['admin']
+            g.admin = data["admin"]
 
             # Return true.
             return True
@@ -91,7 +91,12 @@ class User(db.Model):
 
         # This is only for representation how you want to see user information after query.
         return "<User(id='%s', name='%s', password='%s', email='%s', created='%s')>" % (
-                      self.id, self.username, self.password, self.email, self.created)
+            self.id,
+            self.username,
+            self.password,
+            self.email,
+            self.created,
+        )
 
 
 class Blacklist(db.Model):
@@ -109,4 +114,6 @@ class Blacklist(db.Model):
 
         # This is only for representation how you want to see refresh tokens after query.
         return "<User(id='%s', refresh_token='%s', status='invalidated.')>" % (
-                      self.id, self.refresh_token)
+            self.id,
+            self.refresh_token,
+        )

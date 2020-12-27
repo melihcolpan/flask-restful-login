@@ -13,9 +13,7 @@ from api.conf.auth import jwt
 
 
 def permission(arg):
-
     def check_permissions(f):
-
         @functools.wraps(f)
         def decorated(*args, **kwargs):
 
@@ -23,18 +21,18 @@ def permission(arg):
             auth = request.authorization
 
             # Check if auth is none or not.
-            if auth is None and 'Authorization' in request.headers:
+            if auth is None and "Authorization" in request.headers:
 
                 try:
                     # Get auth type and token.
-                    auth_type, token = request.headers['Authorization'].split(None, 1)
+                    auth_type, token = request.headers["Authorization"].split(None, 1)
                     # auth = Authorization(auth_type, {'token': token})
 
                     # Generate new token.
                     data = jwt.loads(token)
 
                     # Check if admin
-                    if data['admin'] < arg:
+                    if data["admin"] < arg:
 
                         # Return if user is not admin.
                         return error.NOT_ADMIN
