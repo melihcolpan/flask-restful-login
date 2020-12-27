@@ -3,7 +3,7 @@ click==7.0
 Flask==1.1.1
 Flask-HTTPAuth==4.2.0
 Flask-RESTful==0.3.8
-Flask-SQLAlchemy==2.4.1
+Flask-SQLAlchemy==2.4.4
 Flask-Testing==0.8.1
 itsdangerous==1.1.0
 Jinja2==2.11.1
