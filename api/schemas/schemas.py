@@ -7,7 +7,7 @@ from marshmallow import Schema, fields
 class BaseUserSchema(Schema):
 
     """
-        Base user schema returns all fields but this was not used in user handlers.
+    Base user schema returns all fields but this was not used in user handlers.
     """
 
     # Schema parameters.
@@ -22,7 +22,7 @@ class BaseUserSchema(Schema):
 class UserSchema(Schema):
 
     """
-        User schema returns only username, email and creation time. This was used in user handlers.
+    User schema returns only username, email and creation time. This was used in user handlers.
     """
 
     # Schema parameters.
