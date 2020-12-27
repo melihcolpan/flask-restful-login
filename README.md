@@ -77,10 +77,13 @@ curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN"
 
 
 #### Example routes that require authentication
-> Route addresses according to user privileges 
-> For user: /data_user
-> For admin: /data_admin
-> For super admin: /data_super_admin
+Route addresses according to user privileges 
+| User Type        | Route Address           |
+| ------------- |:-------------:|
+| User      | /data_user |
+| Admin      | /data_admin      |
+| Super Admin | /data_super_admin      |
+
 * HTTPIE Request:
 ```sh
 http GET :5000/<ROUTE-ADDRESS> Authorization:"Bearer ACCESS_TOKEN"
@@ -90,7 +93,7 @@ http GET :5000/<ROUTE-ADDRESS> Authorization:"Bearer ACCESS_TOKEN"
 curl -H "Content-Type: application/json" -H "Authorization: Bearer ACCESS_TOKEN" http://localhost:5000/<ROUTE-ADDRESS>
 ```
 
-#### Super admin requiring authentication example handler, list users
+#### Super admin requiring authentication extra example handler, list users
 This handler searches username, email or creation dates (range) in users table and returns information these users to super admin.
 * HTTPIE Request:
 ```sh
