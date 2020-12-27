@@ -26,6 +26,9 @@ def create_app():
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
+    # Generate routes.
+    generate_routes(app)
+
     # Database initialize with app.
     db.init_app(app)
 
@@ -38,6 +41,15 @@ def create_app():
         # Create all database tables.
         db.create_all()
 
+        # Create default super admin user in database.
+        create_super_admin()
+
+        # Create default admin user in database.
+        create_admin_user()
+
+        # Create default test user in database.
+        create_test_user()
+
     # Return app.
     return app
 
@@ -47,20 +59,6 @@ if __name__ == '__main__':
     # Create app.
     app = create_app()
 
-    # Create database tables.
-    db.create_all()
-
-    # Create default super admin user in database.
-    create_super_admin()
-
-    # Create default admin user in database.
-    create_admin_user()
-
-    # Create default test user in database.
-    create_test_user()
-
-    # Generate routes.
-    generate_routes(app)
-
-    # Run app.
+    # Run app. For production use another web server.
+    # Set debug and use_reloader parameters as False.
     app.run(port=5000, debug=True, host='localhost', use_reloader=True)
