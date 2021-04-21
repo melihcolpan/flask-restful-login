@@ -1,4 +1,4 @@
-aniso8601==9.0.0
+aniso8601==9.0.1
 click==7.1.2
 Flask==1.1.2
 Flask-HTTPAuth==4.2.0
