@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from flask import g
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from api.conf.auth import auth, jwt
 from api.database.database import db
@@ -21,7 +22,7 @@ class User(db.Model):
     username = db.Column(db.String(length=80))
 
     # User password.
-    password = db.Column(db.String(length=80))
+    password_hash = db.Column(db.String(length=128))
 
     # User email address.
     email = db.Column(db.String(length=80))
@@ -55,6 +56,20 @@ class User(db.Model):
 
         # Return normal user flag.
         return jwt.dumps({"email": self.email, "admin": 0})
+
+    @property
+    def password(self):
+        raise AttributeError("password is not readable attribute")
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def get_id(self):
+        return self.email
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     # Generates a new access token from refresh token.
     @staticmethod

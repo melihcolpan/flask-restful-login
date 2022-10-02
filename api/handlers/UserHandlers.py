@@ -88,10 +88,12 @@ class Login(Resource):
             return error.INVALID_INPUT_422
 
         # Get user if it is existed.
-        user = User.query.filter_by(email=email, password=password).first()
+        user = User.query.filter_by(email=email).first()
 
-        # Check if user is not existed.
         if user is None:
+            return error.UNAUTHORIZED
+
+        if not user.verify_password(password):
             return error.UNAUTHORIZED
 
         if user.user_role == "user":
