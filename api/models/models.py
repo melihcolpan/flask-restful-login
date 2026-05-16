@@ -90,10 +90,9 @@ class User(db.Model):
     def __repr__(self):
 
         # This is only for representation how you want to see user information after query.
-        return "<User(id='%s', name='%s', password='%s', email='%s', created='%s')>" % (
+        return "<User(id='%s', username='%s', email='%s', created='%s')>" % (
             self.id,
             self.username,
-            self.password,
             self.email,
             self.created,
         )

@@ -8,9 +8,6 @@ from flask import Flask
 from api.conf.config import SQLALCHEMY_DATABASE_URI
 from api.conf.routes import generate_routes
 from api.database.database import db
-from api.db_initializer.db_initializer import (create_admin_user,
-                                               create_super_admin,
-                                               create_test_user)
 
 
 def create_app():
@@ -18,8 +15,17 @@ def create_app():
     # Create a flask app.
     app = Flask(__name__)
 
-    # Set debug true for catching the errors.
-    app.config['DEBUG'] = True
+    # Set secret key from environment.
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    if not SECRET_KEY:
+        raise RuntimeError(
+            "SECRET_KEY environment variable must be set. "
+            "Generate one with: python -c 'import secrets; print(secrets.token_hex(32))'"
+        )
+    app.config["SECRET_KEY"] = SECRET_KEY
+
+    # Set debug from environment (default: False for production safety).
+    app.config['DEBUG'] = os.environ.get("DEBUG", "False").lower() in ("true", "1", "yes")
 
     # Set database url.
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
@@ -40,15 +46,6 @@ def create_app():
 
         # Create all database tables.
         db.create_all()
-
-        # Create default super admin user in database.
-        create_super_admin()
-
-        # Create default admin user in database.
-        create_admin_user()
-
-        # Create default test user in database.
-        create_test_user()
 
     # Return app.
     return app
