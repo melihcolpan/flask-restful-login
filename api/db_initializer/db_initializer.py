@@ -18,10 +18,10 @@ def create_super_admin():
         # Create admin user if it does not existed.
         user = User(
             username="sa_username",
-            password="sa_password",
             email="sa_email@example.com",
             user_role="sa",
         )
+        user.set_password("sa_password")
 
         # Add user to session.
         db.session.add(user)
@@ -49,10 +49,10 @@ def create_admin_user():
         # Create admin user if it does not existed.
         user = User(
             username="admin_username",
-            password="admin_password",
             email="admin_email@example.com",
             user_role="admin",
         )
+        user.set_password("admin_password")
 
         # Add user to session.
         db.session.add(user)
@@ -82,13 +82,12 @@ def create_test_user(
     if user is None:
 
         # Create admin user if it does not existed.
-        # user = User(username=username, password=password, email=email, user_role=user_role)
         user = User(
             username=username,
-            password=password,
             email=email,
             user_role=user_role,
         )
+        user.set_password(password)
 
         # Add user to session.
         db.session.add(user)
