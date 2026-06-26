@@ -1,5 +1,5 @@
 aniso8601==9.0.1
-bcrypt==4.0.1
+bcrypt==5.0.0
 click==7.1.2
 Flask==1.1.2
 Flask-HTTPAuth==4.2.0
