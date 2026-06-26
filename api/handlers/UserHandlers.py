@@ -51,8 +51,9 @@ class Register(Resource):
         if user is not None:
             return error.ALREADY_EXIST
 
-        # Create a new user.
-        user = User(username=username, password=password, email=email)
+        # Create a new user with a hashed password.
+        user = User(username=username, email=email)
+        user.set_password(password)
 
         # Add user to session.
         db.session.add(user)
@@ -88,10 +89,10 @@ class Login(Resource):
             return error.INVALID_INPUT_422
 
         # Get user if it is existed.
-        user = User.query.filter_by(email=email, password=password).first()
+        user = User.query.filter_by(email=email).first()
 
-        # Check if user is not existed.
-        if user is None:
+        # Check if user is not existed or password does not match.
+        if user is None or not user.check_password(password):
             return error.UNAUTHORIZED
 
         if user.user_role == "user":
@@ -200,13 +201,13 @@ class ResetPassword(Resource):
         user = User.query.filter_by(email=g.user).first()
 
         # Check if user password does not match with old password.
-        if user.password != old_pass:
+        if not user.check_password(old_pass):
 
             # Return does not match status.
             return {"status": "old password does not match."}
 
         # Update password.
-        user.password = new_pass
+        user.set_password(new_pass)
 
         # Commit session.
         db.session.commit()

@@ -3,6 +3,7 @@
 
 from datetime import datetime
 
+import bcrypt
 from flask import g
 
 from api.conf.auth import auth, jwt
@@ -31,6 +32,18 @@ class User(db.Model):
 
     # Unless otherwise stated default role is user.
     user_role = db.Column(db.String, default="user")
+
+    # Hash and store the user password.
+    def set_password(self, password):
+        self.password = bcrypt.hashpw(
+            password.encode("utf-8"), bcrypt.gensalt()
+        ).decode("utf-8")
+
+    # Verify a password against the stored hash.
+    def check_password(self, password):
+        return bcrypt.checkpw(
+            password.encode("utf-8"), self.password.encode("utf-8")
+        )
 
     # Generates auth token.
     def generate_auth_token(self, permission_level):
@@ -90,10 +103,9 @@ class User(db.Model):
     def __repr__(self):
 
         # This is only for representation how you want to see user information after query.
-        return "<User(id='%s', name='%s', password='%s', email='%s', created='%s')>" % (
+        return "<User(id='%s', username='%s', email='%s', created='%s')>" % (
             self.id,
             self.username,
-            self.password,
             self.email,
             self.created,
         )
