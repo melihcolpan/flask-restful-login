@@ -90,8 +90,9 @@ class LoginTest(BaseTest):
 
     def test_login_doesnt_exist(self):
 
-        # Expected result from server.
-        expected_result = {"message": "Does not exists."}
+        # Expected result from server. A non-existent user must be
+        # indistinguishable from a wrong password to avoid user enumeration.
+        expected_result = {"message": "Wrong credentials."}
 
         # User data to register.
         data = {"email": "not-exist-user@test.com", "password": "any-password"}
@@ -103,7 +104,7 @@ class LoginTest(BaseTest):
         # print(f"Status Code: {response.status_code}\nResult: {response.json}")
 
         # This raises an AssertionError
-        assert 409 == response.status_code
+        assert 401 == response.status_code
 
         # This raises an AssertionError
         assert expected_result == response.json

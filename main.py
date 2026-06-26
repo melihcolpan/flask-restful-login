@@ -38,13 +38,9 @@ def create_app():
     # Database initialize with app.
     db.init_app(app)
 
-    # Check if there is no database.
-    if not os.path.exists(SQLALCHEMY_DATABASE_URI):
-
-        # New db app if no database.
-        db.app = app
-
-        # Create all database tables.
+    # Create all database tables within an application context.
+    # create_all() is a no-op for tables that already exist.
+    with app.app_context():
         db.create_all()
 
     # Return app.

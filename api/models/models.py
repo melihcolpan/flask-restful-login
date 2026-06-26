@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import bcrypt
 from flask import g
@@ -28,7 +28,7 @@ class User(db.Model):
     email = db.Column(db.String(length=80))
 
     # Creation time for user.
-    created = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Unless otherwise stated default role is user.
     user_role = db.Column(db.String, default="user")

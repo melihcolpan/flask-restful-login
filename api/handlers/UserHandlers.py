@@ -255,8 +255,9 @@ class UsersData(Resource):
             # Create user schema for serializing.
             user_schema = UserSchema(many=True)
 
-            # Get json data
-            data, errors = user_schema.dump(users)
+            # Get json data. marshmallow 3+ returns the serialized data
+            # directly instead of a (data, errors) tuple.
+            data = user_schema.dump(users)
 
             # Return json data from db.
             return data
