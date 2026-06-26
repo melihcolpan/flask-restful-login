@@ -12,6 +12,6 @@ MarkupSafe==3.0.3
 marshmallow==4.3.0
 python-dateutil==2.9.0
 pytz==2026.2
-six==1.16.0
+six==1.17.0
 SQLAlchemy==2.0.51
 Werkzeug==3.1.8
