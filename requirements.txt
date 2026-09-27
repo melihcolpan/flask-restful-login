@@ -14,4 +14,4 @@ python-dateutil==2.9.0.post0
 pytz==2026.2
 six==1.17.0
 SQLAlchemy==2.0.51
-Werkzeug==3.1.8
+Werkzeug==3.1.9
