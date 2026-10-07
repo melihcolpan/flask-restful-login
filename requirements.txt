@@ -8,10 +8,10 @@ Flask-SQLAlchemy==3.1.1
 Flask-Testing==0.8.1
 itsdangerous==2.2.0
 Jinja2==3.1.6
-MarkupSafe==3.0.3
+MarkupSafe==3.0.4
 marshmallow==4.3.1
 python-dateutil==2.9.0.post0
 pytz==2026.5
 six==1.17.0
-SQLAlchemy==2.0.51
+SQLAlchemy==2.1.4
 Werkzeug==3.1.9
