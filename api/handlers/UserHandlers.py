@@ -14,6 +14,9 @@ from api.models.models import Blacklist, User
 from api.roles import role_required
 from api.schemas.schemas import UserSchema
 
+# Minimum password length (NIST SP 800-63B recommends at least 8 characters).
+MIN_PASSWORD_LENGTH = 8
+
 
 class Index(Resource):
     @staticmethod
@@ -40,8 +43,9 @@ class Register(Resource):
             # Return invalid input error.
             return error.INVALID_INPUT_422
 
-        # Check if any field is none.
-        if username is None or password is None or email is None:
+        # Reject empty fields (strip() turns whitespace-only input into "")
+        # and passwords shorter than the minimum length.
+        if not username or not email or len(password) < MIN_PASSWORD_LENGTH:
             return error.INVALID_INPUT_422
 
         # Get user if it is existed.
@@ -196,6 +200,10 @@ class ResetPassword(Resource):
 
         # Get old and new passwords.
         old_pass, new_pass = request.json.get("old_pass"), request.json.get("new_pass")
+
+        # Apply the same password policy as registration.
+        if not isinstance(new_pass, str) or len(new_pass) < MIN_PASSWORD_LENGTH:
+            return error.INVALID_INPUT_422
 
         # Get user. g.user generates email address cause we put email address to g.user in models.py.
         user = User.query.filter_by(email=g.user).first()
