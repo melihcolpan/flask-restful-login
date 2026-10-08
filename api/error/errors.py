@@ -9,5 +9,5 @@ ALREADY_EXIST = ({"message": "Already exists."}, 409)
 UNAUTHORIZED = ({"message": "Wrong credentials."}, 401)
 
 DOES_NOT_EXIST = ({"message": "Does not exists."}, 409)
-NOT_ADMIN = ({"message": "Admin permission denied."}, 999)
+NOT_ADMIN = ({"message": "Admin permission denied."}, 403)
 HEADER_NOT_FOUND = ({"message": "Header does not exists."}, 999)

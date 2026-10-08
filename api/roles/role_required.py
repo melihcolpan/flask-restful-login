@@ -9,50 +9,36 @@ from flask import request
 import api.error.errors as error
 from api.conf.auth import jwt
 
-# from werkzeug.datastructures import Authorization
-
 
 def permission(arg):
+    """Allow the request only if its Bearer token grants at least role ``arg``.
+
+    Roles: user=0, admin=1, super admin=2. Any request without a valid Bearer
+    token, or whose token does not grant the role, is rejected (deny by default).
+    """
+
     def check_permissions(f):
         @functools.wraps(f)
         def decorated(*args, **kwargs):
 
-            # Get request authorization.
+            # Werkzeug parses the Authorization header, including Bearer tokens.
             auth = request.authorization
+            if auth is None or auth.type != "bearer" or not auth.token:
+                return error.UNAUTHORIZED
 
-            # Check if auth is none or not.
-            if auth is None and "Authorization" in request.headers:
+            try:
+                data = jwt.loads(auth.token)
+            except Exception as why:
+                logging.info("Rejected token in permission check: %s", why)
+                return error.UNAUTHORIZED
 
-                try:
-                    # Get auth type and token.
-                    auth_type, token = request.headers["Authorization"].split(None, 1)
-                    # auth = Authorization(auth_type, {'token': token})
+            # Deny unless the token explicitly grants a high enough role.
+            role = data.get("admin") if isinstance(data, dict) else None
+            if not isinstance(role, int) or role < arg:
+                return error.NOT_ADMIN
 
-                    # Generate new token.
-                    data = jwt.loads(token)
-
-                    # Check if admin
-                    if data["admin"] < arg:
-
-                        # Return if user is not admin.
-                        return error.NOT_ADMIN
-
-                except ValueError:
-                    # The Authorization header is either empty or has no token.
-                    return error.HEADER_NOT_FOUND
-
-                except Exception as why:
-                    # Log the error.
-                    logging.error(why)
-
-                    # If it does not generated return false.
-                    return error.INVALID_INPUT_422
-
-            # Return method.
             return f(*args, **kwargs)
 
-        # Return decorated method.
         return decorated
 
-    # Return check permissions method.
     return check_permissions
