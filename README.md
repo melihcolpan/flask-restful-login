@@ -146,14 +146,14 @@ the first two so you can adapt the rest.
 
 ```bash
 http POST :5000/v1/auth/register \
-  username=alice password=s3cret email=alice@example.com
+  username=alice password=s3cret-pass email=alice@example.com
 ```
 
 ```bash
 # curl version
 curl -X POST http://localhost:5000/v1/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"username":"alice","password":"s3cret","email":"alice@example.com"}'
+  -d '{"username":"alice","password":"s3cret-pass","email":"alice@example.com"}'
 ```
 
 Response:
@@ -165,14 +165,14 @@ Response:
 ### 2. Login
 
 ```bash
-http POST :5000/v1/auth/login email=alice@example.com password=s3cret
+http POST :5000/v1/auth/login email=alice@example.com password=s3cret-pass
 ```
 
 ```bash
 # curl version
 curl -X POST http://localhost:5000/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"alice@example.com","password":"s3cret"}'
+  -d '{"email":"alice@example.com","password":"s3cret-pass"}'
 ```
 
 Response — copy the `access_token`, you'll need it next:
@@ -203,7 +203,7 @@ http POST :5000/v1/auth/refresh refresh_token=<REFRESH_TOKEN>
 ```bash
 http POST :5000/v1/auth/password_reset \
   Authorization:"Bearer <ACCESS_TOKEN>" \
-  old_pass=s3cret new_pass=ev3nm0resecret
+  old_pass=s3cret-pass new_pass=ev3nm0resecret
 ```
 
 ### 6. Logout (invalidate a refresh token)
