@@ -17,6 +17,24 @@ from api.schemas.schemas import UserSchema
 # Minimum password length (NIST SP 800-63B recommends at least 8 characters).
 MIN_PASSWORD_LENGTH = 8
 
+# bcrypt only uses the first 72 bytes of a password and bcrypt 5 rejects longer ones.
+MAX_PASSWORD_BYTES = 72
+
+
+def is_valid_new_password(password):
+    """Password policy for registration and password reset.
+
+    Passwords are used exactly as typed (never stripped). They must have at
+    least MIN_PASSWORD_LENGTH characters, not be only whitespace, and fit in
+    MAX_PASSWORD_BYTES bytes.
+    """
+    return (
+        isinstance(password, str)
+        and len(password) >= MIN_PASSWORD_LENGTH
+        and password.strip() != ""
+        and len(password.encode("utf-8")) <= MAX_PASSWORD_BYTES
+    )
+
 
 class Index(Resource):
     @staticmethod
@@ -29,10 +47,10 @@ class Register(Resource):
     def post():
 
         try:
-            # Get username, password and email.
+            # Get username, password and email. The password is kept exactly as typed.
             username, password, email = (
                 request.json.get("username").strip(),
-                request.json.get("password").strip(),
+                request.json.get("password"),
                 request.json.get("email").strip(),
             )
         except Exception as why:
@@ -44,8 +62,8 @@ class Register(Resource):
             return error.INVALID_INPUT_422
 
         # Reject empty fields (strip() turns whitespace-only input into "")
-        # and passwords shorter than the minimum length.
-        if not username or not email or len(password) < MIN_PASSWORD_LENGTH:
+        # and passwords that do not meet the password policy.
+        if not username or not email or not is_valid_new_password(password):
             return error.INVALID_INPUT_422
 
         # Get user if it is existed.
@@ -74,10 +92,10 @@ class Login(Resource):
     def post():
 
         try:
-            # Get user email and password.
+            # Get user email and password. The password is kept exactly as typed.
             email, password = (
                 request.json.get("email").strip(),
-                request.json.get("password").strip(),
+                request.json.get("password"),
             )
 
         except Exception as why:
@@ -96,7 +114,7 @@ class Login(Resource):
         user = User.query.filter_by(email=email).first()
 
         # Check if user is not existed or password does not match.
-        if user is None or not user.check_password(password):
+        if user is None or not user.check_password_or_legacy(password):
             return error.UNAUTHORIZED
 
         if user.user_role == "user":
@@ -202,14 +220,14 @@ class ResetPassword(Resource):
         old_pass, new_pass = request.json.get("old_pass"), request.json.get("new_pass")
 
         # Apply the same password policy as registration.
-        if not isinstance(new_pass, str) or len(new_pass) < MIN_PASSWORD_LENGTH:
+        if not is_valid_new_password(new_pass):
             return error.INVALID_INPUT_422
 
         # Get user. g.user generates email address cause we put email address to g.user in models.py.
         user = User.query.filter_by(email=g.user).first()
 
         # Check if user password does not match with old password.
-        if not user.check_password(old_pass):
+        if not user.check_password_or_legacy(old_pass):
 
             # Return does not match status.
             return {"status": "old password does not match."}

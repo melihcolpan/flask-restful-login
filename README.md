@@ -246,6 +246,14 @@ This example follows a few basic good practices you should keep in your own apps
 - **No hardcoded secrets** — token secrets and `SECRET_KEY` come from the
   environment, and the app won't start without them.
 - **Passwords are hashed with bcrypt** — the database never stores plaintext.
+- **A password policy** — on registration and password reset, a password must
+  have at least 8 characters, not be only spaces, and fit in bcrypt's 72-byte
+  limit. Passwords are used exactly as typed; leading and trailing spaces are
+  part of the password.
+- **Roles are checked on every request** — admin-only routes deny by default:
+  a missing or invalid token gets 401, a token without the role gets 403.
+- **Debug mode is off unless `DEBUG` is set** — the Werkzeug debugger allows
+  code execution, so it never runs by accident.
 - **No default accounts** — there are no built-in admin users with known
   passwords.
 - **Login doesn't leak which emails exist** — a wrong password and an unknown

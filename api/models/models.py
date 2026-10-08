@@ -41,8 +41,22 @@ class User(db.Model):
 
     # Verify a password against the stored hash.
     def check_password(self, password):
+        # bcrypt only handles up to 72 bytes; a longer password can never match.
+        if not isinstance(password, str) or len(password.encode("utf-8")) > 72:
+            return False
         return bcrypt.checkpw(
             password.encode("utf-8"), self.password.encode("utf-8")
+        )
+
+    def check_password_or_legacy(self, password):
+        # Passwords used to be stripped before hashing. Accept the stripped form
+        # too, so accounts created that way can still log in.
+        if self.check_password(password):
+            return True
+        return (
+            isinstance(password, str)
+            and password != password.strip()
+            and self.check_password(password.strip())
         )
 
     # Generates auth token.
