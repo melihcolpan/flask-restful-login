@@ -53,5 +53,7 @@ if __name__ == '__main__':
     app = create_app()
 
     # Run app. For production use another web server.
-    # Set debug and use_reloader parameters as False.
-    app.run(port=5000, debug=True, host='localhost', use_reloader=True)
+    # Debug mode and the reloader follow the DEBUG environment variable
+    # (default: False), so the Werkzeug debugger is never on by accident.
+    debug = app.config['DEBUG']
+    app.run(port=5000, debug=debug, host='localhost', use_reloader=debug)
