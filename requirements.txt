@@ -10,7 +10,7 @@ itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.4
 marshmallow==4.3.1
-python-dateutil==2.9.0.post0
+python-dateutil==3.0.0
 pytz==2026.5
 six==1.17.0
 SQLAlchemy==2.1.4
